@@ -1,0 +1,95 @@
+--Задание 1...
+--1
+create login Mark
+with password = '123'
+
+exec master..sp_addsrvrolemember @loginame = 'Mark', @rolename = sysadmin
+
+
+--2
+create login Irina
+with password = '123'
+
+exec master..sp_addsrvrolemember @loginame = 'Irina', @rolename = dbcreator 
+
+--3
+create login Boris
+with password = '123'
+create login Aleksandr
+with password = '123'
+create login Aleksey
+with password = '123'
+create login Olga
+with password = '123'
+create login Elena
+with password = '123'
+
+exec master..sp_addsrvrolemember @loginame = 'Boris', @rolename = sysadmin 
+exec master..sp_addsrvrolemember @loginame = 'Aleksandr', @rolename = sysadmin 
+exec master..sp_addsrvrolemember @loginame = 'Aleksey', @rolename = sysadmin 
+exec master..sp_addsrvrolemember @loginame = 'Olga', @rolename = sysadmin 
+exec master..sp_addsrvrolemember @loginame = 'Elena', @rolename = sysadmin 
+
+--4 
+screen
+
+_______________________________________________
+--Задание 2..
+--1 
+exec sp_helprole;
+
+--2
+
+SELECT * FROM sys.fn_builtin_permissions('SERVER') ORDER BY permission_name;
+
+exec sp_srvrolepermission role
+
+
+--3
+CREATE PROCEDURE show_sysadmin_members
+AS
+BEGIN
+    SELECT name
+    FROM sys.server_principals
+    WHERE IS_SRVROLEMEMBER('sysadmin', name) = 1
+END
+
+--4
+CREATE PROCEDURE show_dbcreator_members
+AS
+BEGIN
+    SELECT name
+    FROM sys.server_principals
+    WHERE IS_SRVROLEMEMBER('dbcreator', name) = 1
+END
+
+--5
+CREATE PROCEDURE check_sysadmin_membership(@login_name sysname)
+AS
+BEGIN
+    IF IS_SRVROLEMEMBER('sysadmin', @login_name) = 1
+        PRINT 'Пользователь ' + @login_name + ' является членом серверной роли sysadmin'
+    ELSE
+        PRINT 'Пользователь ' + @login_name + ' не является членом серверной роли sysadmin'
+END
+_______________________________________________
+
+Задание 3..
+--1
+GRANT CONTROL TO Mark;
+
+
+--2
+GRANT SELECT ON SCHEMA :: dbo TO Irina;
+
+
+--3
+REVOKE INSERT, UPDATE, DELETE ON SCHEMA :: dbo TO Irina;
+
+
+--4
+GRANT BACKUP DATABASE TO Marat;
+
+
+--5
+GRANT CREATE TABLE, CREATE VIEW TO Oleg;
